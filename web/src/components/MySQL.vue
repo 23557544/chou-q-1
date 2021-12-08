@@ -8,7 +8,7 @@
       <el-button icon="el-icon-video-pause" type="danger">停止</el-button>
     </el-row>
     <el-input v-model="command" type="textarea"></el-input>
-    <el-tabs v-model="activeTab" type="border-card" @tab-remove="closeSource" :closable="tabs.length > 1">
+    <el-tabs v-model="activeTab" type="border-card">
       <el-tab-pane label="信息" name="info"> xxxx </el-tab-pane>
       <el-tab-pane label="结果" name="result">
         <el-table></el-table>
