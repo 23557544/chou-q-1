@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       icon: {
-        logo: require('../src/assets/logo.svg')
+        logo: require("../src/assets/logo.svg"),
       },
       sources: [
         { label: "武汉测试环境MySQL", connect: true, type: "MySQL" },
@@ -119,7 +119,10 @@ body {
   text-align: center;
 }
 .el-tabs__content {
-  height: calc(100%, 39px);
+  height: calc(100% - 69px);
+}
+.el-tab-pane {
+  height: 100%;
 }
 .aside {
   border-right: 4px solid #f0f0f0;
@@ -134,5 +137,10 @@ p {
 .text-success {
   color: #67c23a;
 }
-.logo {float: right; width: 200px; height: auto; margin-top: -45px;}
+.logo {
+  float: right;
+  width: 200px;
+  height: auto;
+  margin-top: -45px;
+}
 </style>
