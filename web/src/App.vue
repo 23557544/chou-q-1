@@ -2,11 +2,14 @@
   <div id="app">
     <el-container style="height: 100%">
       <el-header class="header">
-        <div style="margin-top: 10px">
+        <div style="float: left; margin-top: 10px">
           <el-button @click="dialogVisible = true" icon="el-icon-document-add"> 添加 </el-button>
           <el-button icon="el-icon-connection"> 连接 </el-button>
           <el-button icon="el-icon-link"> 断开 </el-button>
           <el-button icon="el-icon-delete"> 删除 </el-button>
+        </div>
+        <div class="logo">
+          <img :src="icon.logo" alt />
         </div>
       </el-header>
       <el-container class="main">
@@ -51,6 +54,9 @@ export default {
   name: "App",
   data() {
     return {
+      icon: {
+        logo: require('../src/assets/logo.svg')
+      },
       sources: [
         { label: "武汉测试环境MySQL", connect: true, type: "MySQL" },
         { label: "武汉SIT环境MySQL", connect: false, type: "MySQL" },
@@ -128,4 +134,5 @@ p {
 .text-success {
   color: #67c23a;
 }
+.logo {float: right; width: 200px; height: auto; margin-top: -45px;}
 </style>
