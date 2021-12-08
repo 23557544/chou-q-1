@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-container>
+    <el-container style="height: 100%">
       <el-header class="header">
         <div style="margin-top: 10px">
           <el-button @click="dialogVisible = true" icon="el-icon-document-add"> 添加 </el-button>
@@ -19,14 +19,14 @@
           </el-tree>
         </el-aside>
         <el-main style="margin: 0; padding: 0">
-          <el-tabs v-model="activeTab" type="border-card" @tab-remove="closeSource" :closable="tabs.length > 1">
+          <el-tabs v-model="activeTab" type="border-card" @tab-remove="closeSource" :closable="tabs.length > 1" style="height: calc(100% - 2px)">
             <el-tab-pane v-for="tab in tabs" :label="tab.label" :name="tab.id" :key="tab.id">
               <component :is="tab.component" v-bind="tab.bind" v-on="tab.on"></component>
             </el-tab-pane>
           </el-tabs>
         </el-main>
       </el-container>
-      <el-footer class="footer" style="height: 28px">
+      <el-footer class="footer" height="26px">
         <p>中国电子系统技术有限公司 - 数据中台业务部 - 酬勤数据运维平台</p>
       </el-footer>
     </el-container>
@@ -72,7 +72,7 @@ export default {
       if (!tab) {
         // 首次打开
         source.id = node.id.toString();
-        this.$set(source,"component", require(`@/components/${source.type}.vue`).default);
+        this.$set(source, "component", require(`@/components/${source.type}.vue`).default);
         this.tabs.push(source);
         tab = source;
       }
@@ -88,7 +88,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 html,
 body {
   width: 100%;
@@ -96,24 +96,24 @@ body {
   margin: 0;
   padding: 0;
 }
+#app {
+  height: 100%;
+}
 .header {
   background-color: #f0f0f0;
   border-bottom: 1px solid #bbbbbb;
 }
 .main {
-  position: absolute;
-  width: 100%;
-  top: 60px;
-  bottom: 28px;
 }
 .footer {
-  position: absolute;
   width: 100%;
   bottom: 0;
   background-color: #f0f0f0;
   border-top: 1px solid #d7d7d7;
-  line-height: 26px;
   text-align: center;
+}
+.el-tabs__content {
+  height: calc(100%, 39px);
 }
 .aside {
   border-right: 4px solid #f0f0f0;
