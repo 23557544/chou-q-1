@@ -2,73 +2,130 @@
   <div id="app">
     <el-container>
       <el-header class="header">
-        <div style="margin-top: 10px;">
-          <el-button>
-            <i class="el-icon-document-add"></i>
-            <span>添加</span>
-          </el-button>
-          <el-button>
-            <i class="el-icon-connection"></i>
-            <span>连接</span>
-          </el-button>
-          <el-button>
-            <i class="el-icon-link"></i>
-            <span>断开</span>
-          </el-button>
-          <el-button>
-            <i class="el-icon-delete"></i>
-            <span>删除</span>
-          </el-button>
+        <div style="margin-top: 10px">
+          <el-button @click="dialogVisible = true" icon="el-icon-document-add"> 添加 </el-button>
+          <el-button icon="el-icon-connection"> 连接 </el-button>
+          <el-button icon="el-icon-link"> 断开 </el-button>
+          <el-button icon="el-icon-delete"> 删除 </el-button>
         </div>
       </el-header>
       <el-container class="main">
         <el-aside class="aside">
-          <el-tree :data="sources">
+          <el-tree :data="sources" @node-click="openSource">
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <i :class="data.connect? 'el-icon-info text-success' : 'el-icon-info'"></i>
-              <span :class="data.connect? 'text-success' : 'text-normal'" style="margin-left: 5px">{{ node.label }}</span>
+              <i :class="data.connect ? 'el-icon-info text-success' : 'el-icon-info'"></i>
+              <span :class="data.connect ? 'text-success' : 'text-normal'" style="margin-left: 5px">{{ node.label }}</span>
             </span>
           </el-tree>
         </el-aside>
-        <el-main style="margin: 0; padding: 0;">
-          <el-tabs v-model="activeTab" type="border-card">
-            <el-tab-pane label="武汉测试环境MySQL" name="first">武汉测试环境MySQL</el-tab-pane>
-            <el-tab-pane label="武汉SIT环境MySQL" name="second">武汉SIT环境MySQL</el-tab-pane>
+        <el-main style="margin: 0; padding: 0">
+          <el-tabs v-model="activeTab" type="border-card" @tab-remove="closeSource" :closable="tabs.length > 1">
+            <el-tab-pane v-for="tab in tabs" :label="tab.label" :name="tab.id" :key="tab.id">
+              <component :is="tab.component" v-bind="tab.bind" v-on="tab.on"></component>
+            </el-tab-pane>
           </el-tabs>
         </el-main>
       </el-container>
-      <el-footer class="footer" style="height: 28px;">
+      <el-footer class="footer" style="height: 28px">
         <p>中国电子系统技术有限公司 - 数据中台业务部 - 酬勤数据运维平台</p>
       </el-footer>
     </el-container>
+    <el-dialog title="添加数据源" :visible.sync="dialogVisible" width="30%">
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addSource">确 定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css';
+import Vue from "vue";
+import Element from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 
-Vue.use(Element)
+Vue.use(Element);
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      sources: [{label: '武汉测试环境MySQL', connect: true}, {label: '武汉SIT环境MySQL', connect: false}],
-      activeTab: 'first'
-    }
-  }
-}
+      sources: [
+        { label: "武汉测试环境MySQL", connect: true, type: "MySQL" },
+        { label: "武汉SIT环境MySQL", connect: false, type: "MySQL" },
+        { label: "武汉SIT环境Redis", connect: false, type: "Redis" },
+      ],
+      tabs: [],
+      activeTab: "",
+      dialogVisible: false,
+    };
+  },
+  methods: {
+    addSource() {
+      this.sources.push({ label: "武汉测试环境MySQL", connect: false });
+      this.dialogVisible = false;
+    },
+    openSource(source, node) {
+      console.log(source);
+      let tab = this.tabs.find((t) => t.id == node.id);
+      if (!tab) {
+        // 首次打开
+        source.id = node.id.toString();
+        this.$set(source,"component", require(`@/components/${source.type}.vue`).default);
+        this.tabs.push(source);
+        tab = source;
+      }
+      this.activeTab = tab.id;
+    },
+    closeSource(id) {
+      let index = this.tabs.findIndex((t) => t.id == id);
+      this.tabs.splice(index, 1);
+      if (index >= this.tabs.length) index = this.tabs.length - 1;
+      this.activeTab = this.tabs[index].id;
+    },
+  },
+};
 </script>
 
 <style>
-html, body {width: 100%; height: 100%; margin: 0; padding: 0;}
-.header {background-color: #f0f0f0; border-bottom: 1px solid #bbbbbb;}
-.main {position: absolute; width: 100%; top: 60px; bottom: 28px;}
-.footer {position: absolute; width: 100%; bottom: 0; background-color: #f0f0f0; border-top: 1px solid #d7d7d7; line-height: 26px; text-align: center;}
-.aside {border-right: 4px solid #f0f0f0;}
-p {font-size: 12px; margin: 0;}
-.custom-tree-node {font-size: 12px;}
-.text-success {color: #67C23A;}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.header {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #bbbbbb;
+}
+.main {
+  position: absolute;
+  width: 100%;
+  top: 60px;
+  bottom: 28px;
+}
+.footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-color: #f0f0f0;
+  border-top: 1px solid #d7d7d7;
+  line-height: 26px;
+  text-align: center;
+}
+.aside {
+  border-right: 4px solid #f0f0f0;
+}
+p {
+  font-size: 12px;
+  margin: 0;
+}
+.custom-tree-node {
+  font-size: 12px;
+}
+.text-success {
+  color: #67c23a;
+}
 </style>
