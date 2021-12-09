@@ -9,7 +9,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-video-play" type="success" size="small" round>运行</el-button>
+            <el-button @click="submit" icon="el-icon-video-play" type="success" size="small" round>运行</el-button>
           </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-video-pause" type="danger" size="small" round>停止</el-button>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+// import mysql from "mysql";
 export default {
   data() {
     return {
@@ -34,7 +35,42 @@ export default {
       database: {},
       databases: [],
       activeTab: "result",
+      connection: {},
     };
+  },
+  methods: {
+    async connect() {
+      var mysql = require("mysql");
+
+      console.log(mysql);
+      this.connection = mysql.createConnection({
+        host: this.host,
+        user: this.user,
+        password: this.password,
+        database: this.database,
+        port: this.port,
+      });
+      await this.connection.connect();
+      console.log(this.connection);
+    },
+    async submit() {
+      let result = await this.connection.query(this.command);
+      console.log(result);
+    },
+  },
+  props: {
+    host: {
+      type: String,
+    },
+    user: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+  },
+  created() {
+    this.connect();
   },
 };
 </script>

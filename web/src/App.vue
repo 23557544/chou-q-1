@@ -59,7 +59,18 @@ export default {
       },
       sources: [
         { label: "武汉测试环境MySQL", connect: true, type: "MySQL" },
-        { label: "武汉SIT环境MySQL", connect: false, type: "MySQL" },
+        {
+          label: "武汉SIT环境MySQL",
+          connect: false,
+          type: "MySQL",
+          bind: {
+            host: "localhost",
+            port: "3306",
+            user: "root",
+            password: "123456",
+            database: "promote",
+          },
+        },
         { label: "武汉SIT环境Redis", connect: false, type: "Redis" },
       ],
       tabs: [],
