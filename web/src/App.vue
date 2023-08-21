@@ -30,7 +30,7 @@
         </el-main>
       </el-container>
       <el-footer class="footer" height="26px">
-        <p>中国电子系统技术有限公司 - 数据中台业务部 - 酬勤数据运维平台</p>
+        <p>酬勤数据运维平台</p>
       </el-footer>
     </el-container>
     <el-dialog title="添加数据源" :visible.sync="dialogVisible" width="30%">
